@@ -147,7 +147,9 @@ INSTALLED_APPS += ["anymail"]
 # https://anymail.readthedocs.io/en/stable/esps/brevo/
 EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 ANYMAIL = {
-    "BREVO_API_KEY": env("BREVO_API_KEY"),
+    "BREVO_API_KEY": env("BREVO_API_KEY", default=None),
+    "BREVO_API_URL": env("BREVO_API_URL", default=None),
+
     "BREVO_API_URL": env("BREVO_API_URL", default="https://api.brevo.com/v3/"),
 }
 
