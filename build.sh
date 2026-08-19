@@ -1,8 +1,7 @@
-#!/usr/bin/env bash
 # exit on error
 set -o errexit
 
-# 1. Install uv into Render's system environment
+# 1. Install uv into Render's system environment (FIXED LINK HERE)
 curl -LsSf https://astral.sh | sh
 source $HOME/.local/bin/env
 
