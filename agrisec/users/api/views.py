@@ -44,7 +44,7 @@ class UserViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 class CustomAuthToken(ObtainAuthToken):
     serializer_class = UserLoginSerializer
     permission_classes = [AllowAny]
-
+    authentication_classes = []
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -70,6 +70,7 @@ class CustomAuthToken(ObtainAuthToken):
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
     permission_classes = [AllowAny] # Anyone is allowed to sign up!
+    authentication_classes = []
 
     def create(self, request, *args, **kwargs):
         # 1. Run validation via the serializer
