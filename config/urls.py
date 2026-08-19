@@ -9,6 +9,8 @@ from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 from agrisec.users.api.views import CustomAuthToken, SignupView
+from agrisec.farms.api.views import testView
+
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -41,6 +43,7 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    path("test/",testView.as_view(),name="test")
 ]
 
 if settings.DEBUG:
