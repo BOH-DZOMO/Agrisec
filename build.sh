@@ -14,8 +14,8 @@ else
 fi
 
 # 3. Compile static styles and apply Postgres migrations
-uv run python manage.py collectstatic --noinput
-uv run python manage.py migrate
+uv run python manage.py collectstatic --noinput --settings=config.settings.production
+uv run python manage.py migrate --noinput --settings=config.settings.production
 
 # 4. Create a superuser AUTOMATICALLY if it doesn't exist
 uv run python manage.py createsuperuser --noinput || true
