@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=agrisec
+POSTGRES_USER=wwyTefcjoEsqQbJxgwmMgEJkLbRqLLVc
+POSTGRES_PASSWORD=AFb0Blut3rn657cmyZMvIYsjDWjyVc4GHqhCArEGOnOONG7C24NTNwhGrOgLK16v
