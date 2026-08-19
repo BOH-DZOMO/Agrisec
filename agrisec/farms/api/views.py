@@ -30,7 +30,7 @@ class FarmViewSet(ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-class testView(APIView):
+class TestView(APIView):
     authentication_classes = []
     permission_classes = [AllowAny]
     def get(self, request, *args, **kwargs):
