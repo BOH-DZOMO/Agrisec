@@ -319,24 +319,48 @@ CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
 
-# By Default swagger ui is available only to admin user(s). You can change permission classes to change that
 # See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
 SPECTACULAR_SETTINGS = {
-    "TITLE": "agrisec API",
-    "DESCRIPTION": "Documentation of API endpoints of agrisec",
+    "TITLE": "AgriSec IoT & Farm Management API",
+    "DESCRIPTION": (
+        "REST API for managing farms, agricultural IoT sensor devices (ESP32, STM32, Arduino), "
+        "and real-time environmental telemetry readings.\n\n"
+        "### Authentication\n"
+        "1. Register via `POST /api/signup/` or log in via `POST /api/auth-token/` to obtain a token.\n"
+        "2. Click **Authorize** above and enter: `Token <your_token_key>` (under `tokenAuth`)."
+    ),
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
-    "SCHEMA_PATH_PREFIX": "/api/",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
+    "SERVE_AUTHENTICATION": [],
+    "SCHEMA_PATH_PREFIX": r"/api/",
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": False,
+        "filter": True,
+    },
+    "TAGS": [
+        {"name": "Auth", "description": "User registration, token login, and logout endpoints."},
+        {"name": "Users", "description": "Authenticated user profile retrieval and updates."},
+        {"name": "Farms", "description": "Farm management and aggregated environmental summaries."},
+        {"name": "Devices", "description": "IoT sensor device registration, status toggling, and device readings."},
+        {"name": "Telemetry", "description": "Environmental telemetry readings and IoT hardware ingestion."},
+        {"name": "Health", "description": "API connectivity and service health checks."},
+    ],
 }
 # Your stuff...
 # ------------------------------------------------------------------------------

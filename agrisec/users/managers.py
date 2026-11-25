@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+import uuid
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager as DjangoUserManager
@@ -18,6 +19,12 @@ class UserManager(DjangoUserManager["User"]):
             msg = "The given email must be set"
             raise ValueError(msg)
         email = self.normalize_email(email)
+        if not extra_fields.get("username"):
+            base_username = email.split("@", maxsplit=1)[0][:140]
+            candidate = base_username
+            while self.model.objects.filter(username=candidate).exists():
+                candidate = f"{base_username}_{uuid.uuid4().hex[:6]}"
+            extra_fields["username"] = candidate
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
         user.save(using=self._db)

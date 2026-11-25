@@ -6,9 +6,11 @@ from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
+from drf_spectacular.views import SpectacularRedocView
 from drf_spectacular.views import SpectacularSwaggerView
-from rest_framework.authtoken.views import obtain_auth_token
-from agrisec.users.api.views import CustomAuthToken, SignupView
+from agrisec.users.api.views import CustomAuthToken
+from agrisec.users.api.views import LogoutView
+from agrisec.users.api.views import SignupView
 from agrisec.farms.api.views import TestView
 
 
@@ -33,17 +35,23 @@ urlpatterns = [
 urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
-    # DRF auth token
-    # path("api/auth-token/", obtain_auth_token, name="obtain_auth_token"),
+    # DRF auth & account endpoints
     path("api/auth-token/", CustomAuthToken.as_view(), name="auth_token"),
     path("api/signup/", SignupView.as_view(), name="signup"),
+    path("api/logout/", LogoutView.as_view(), name="logout"),
+    # OpenAPI schema & documentation UIs
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
         "api/docs/",
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
-    path("api/test/",TestView.as_view(),name="test")
+    path(
+        "api/redoc/",
+        SpectacularRedocView.as_view(url_name="api-schema"),
+        name="api-redoc",
+    ),
+    path("api/test/", TestView.as_view(), name="test"),
 ]
 
 if settings.DEBUG:

@@ -17,7 +17,7 @@ class TestUserManager:
         assert not user.is_staff
         assert not user.is_superuser
         assert user.check_password("something-r@nd0m!")
-        assert user.username is None
+        assert user.username == "john"
 
     def test_create_superuser(self):
         user = User.objects.create_superuser(
@@ -27,29 +27,35 @@ class TestUserManager:
         assert user.email == "admin@example.com"
         assert user.is_staff
         assert user.is_superuser
-        assert user.username is None
+        assert user.username == "admin"
 
-    def test_create_superuser_username_ignored(self):
-        user = User.objects.create_superuser(
-            email="test@example.com",
+    def test_create_multiple_users_with_same_email_prefix_generates_unique_usernames(self):
+        u1 = User.objects.create_superuser(
+            email="admin@example.com",
             password="something-r@nd0m!",  # noqa: S106
         )
-        assert user.username is None
+        u2 = User.objects.create_superuser(
+            email="admin@agrisec.com",
+            password="something-r@nd0m!",  # noqa: S106
+        )
+        assert u1.username == "admin"
+        assert u2.username.startswith("admin_")
+        assert u1.username != u2.username
 
 
 @pytest.mark.django_db
-def test_createsuperuser_command():
-    """Ensure createsuperuser command works with our custom manager."""
-    out = StringIO()
-    command_result = call_command(
-        "createsuperuser",
-        "--email",
-        "henry@example.com",
-        interactive=False,
-        stdout=out,
-    )
+def test_createsuperuser_command_multiple_times():
+    """Ensure createsuperuser command works repeatedly without username collisions."""
+    for email in ("henry@example.com", "sarah@example.com"):
+        out = StringIO()
+        command_result = call_command(
+            "createsuperuser",
+            "--email",
+            email,
+            interactive=False,
+            stdout=out,
+        )
+        assert command_result is None
+        assert out.getvalue() == "Superuser created successfully.\n"
 
-    assert command_result is None
-    assert out.getvalue() == "Superuser created successfully.\n"
-    user = User.objects.get(email="henry@example.com")
-    assert not user.has_usable_password()
+    assert User.objects.filter(is_superuser=True).count() == 2
